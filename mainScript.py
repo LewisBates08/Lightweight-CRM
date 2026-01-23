@@ -111,6 +111,35 @@ def displayContacts(cursor):
 
             ===========================""")
 #================
+#=================
+def addDeal(cursor):
+    #allows user to add deals to a contact, which will include deals title, value and status
+    cid=int(input("Enter the ID of the contact you want to add a deal to"))
+    title=input("Enter the title of the deal to add:")
+    value=int(input("Enter value of deal:"))
+    stage=input("Enter the stage of the deal:")
+    details=(cid,title,value,stage)
+    query=("INSERT INTO deals(contact_id,title,value,stage)VALUES(?,?,?,?)")
+    cursor.execute(query,(details))
+#================
+
+def displayDeals(cursor):
+    chosenid=input("Enter ID of contact to find deals for")
+    cursor.execute("SELECT * FROM deals WHERE contact_id = ?",(chosenid))
+    deals=cursor.fetchall()
+    cursor.execute("SELECT firstname,lastname FROM contacts WHERE id = ?",(chosenid))
+    contact=cursor.fetchall()
+    for i in contact:
+        first,last=i
+        print(f"Contact{chosenid}:{first} {last}")
+    
+    if not deals:
+        print('No deals assosiated with contact',chosenid)
+    for i in deals:
+        #print(i)
+        did,cid,title,value,stage=i
+        print("===CONTACT ",chosenid,"'S DEALS====")
+        print(f"\nTitle:{title}\nValue:{value}\nStage:{stage}\n\n==========")
 
 def deleteContacts(cursor):
     cid=input("Enter ID of contact to remove")
@@ -194,30 +223,43 @@ def editContact(cursor):
     
 ###====MAIN PROGRAM=====
 
+    
+###====MAIN PROGRAM=====
+
 ##INITIALISE DATABASE
 #creates a connection to the database file
 conn=sq.connect("miniCRM.db")
 #creates a cursor- allows us to execute commands onto the database, in this case,
 cursor=conn.cursor()
 #creating the table
-cursor.execute("""CREATE TABLE IF NOT EXISTS contacts(id INTEGER,
-firstname TEXT NOT NULL,
-lastname TEXT NOT NULL,
-email TEXT UNIQUE NOT NULL,
-phone TEXT UNIQUE NOT NULL,
-location TEXT NOT NULL)""")
-cursor.execute("SELECT * FROM contacts")
-rows= cursor.fetchall()
-if not rows:
-    cursor.execute("INSERT INTO contacts(id,firstname,lastname,email,phone,location)VALUES(?,?,?,?,?,?)",(0,".",".",".",".","."))
-#editContact(cursor)
-#addContacts(cursor)
-displayContacts(cursor)
-findContact(cursor)
+conn.execute("PRAGMA foreign_keys = ON")
+cursor.execute("""CREATE TABLE IF NOT EXISTS contacts (
+    id INTEGER PRIMARY KEY,
+    firstname TEXT NOT NULL,
+    lastname TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    phone TEXT UNIQUE NOT NULL,
+    location TEXT UNIQUE NOT NULL)""")
+cursor.execute("""CREATE TABLE IF NOT EXISTS deals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    contact_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    value INTEGER NOT NULL,
+    stage TEXT NOT NULL,
+    FOREIGN KEY (contact_id) REFERENCES contacts(id)
+);""")
+
+##cursor.execute("SELECT * FROM contacts")
+##rows= cursor.fetchall()
+##
+##if not rows:
+##    cursor.execute("INSERT INTO contacts(id,firstname,lastname,email,phone,location)VALUES(?,?,?,?,?,?)",(0,".",".",".",".","."))
+displayDeals(cursor)
+
     
 #saves and closes the file closes the file
 conn.commit()
-conn.close()
+conn.close()    
 
 ##====README=====
 
