@@ -34,9 +34,6 @@ To build this project i used multiple AI tools (copilot and ChatGPT 5) in order 
 I used Python, and I used the regular expressions library(re) for my input validation. I imported the library for SQLite3 to create/ manipulate a database using SQL.
 I used basic Git commands in the terminal, as well as the GUI git options provided in VS code.
 
-
-
-
 ---
 
 ## How It Works
@@ -47,7 +44,5 @@ I used basic Git commands in the terminal, as well as the GUI git options provid
 
 ---
 
-## How to Run
-1. Clone the repository:
    ```bash
-   git clone <repo-url>
+   git clone <repo-url
