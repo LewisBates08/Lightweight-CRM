@@ -44,5 +44,4 @@ I used basic Git commands in the terminal, as well as the GUI git options provid
 
 ---
 
-   ```bash
-   git clone <repo-url
+
